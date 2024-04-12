@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Tutorial6.Models;
+using Tutorial6.Models.DTOs;
 
 namespace Tutorial6.Controllers;
 
@@ -17,9 +18,9 @@ public class AnimalsController : ControllerBase
     public IActionResult GetAnimals()
     {
         // Open connection
-        SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Default"));
+        using SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Default"));
         // Create command
-        SqlCommand command = new SqlCommand();
+        using SqlCommand command = new SqlCommand();
         command.Connection = connection;
         command.CommandText = "SELECT * FROM ANIMAL;";
         // Execute command
@@ -46,13 +47,18 @@ public class AnimalsController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult AddAnimal()
+    public IActionResult AddAnimal(AddAnimal animal)
     {
         using SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Default"));
         connection.Open();
         using SqlCommand command = new SqlCommand();
         command.Connection = connection;
-        command.CommandText = ""
+        command.CommandText = "INSERT INTO Animal VALUES (@animalName,@animalDescription,@animalCategory,@animalArea)";
+        command.Parameters.AddWithValue("@animalName", animal.Name);
+        command.Parameters.AddWithValue("@animalDescription", animal.Description);
+        command.Parameters.AddWithValue("@animalCategory", animal.Category);
+        command.Parameters.AddWithValue("@animalArea", animal.Area);
+        command.ExecuteNonQuery();
         return Created("", null);
     }
 }
