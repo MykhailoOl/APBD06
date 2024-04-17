@@ -6,14 +6,16 @@ namespace Tutorial6.Repositories;
 
 public class AnimalRepository
 {
-    public List<Animal> getListOfAnimals(IConfiguration _configuration)
+    public List<Animal> getListOfAnimals(IConfiguration _configuration,string orderBy = "name")
     {
+        var validSortByValues = new HashSet<string> {"name", "description", "category", "area"};
+        orderBy = validSortByValues.Contains(orderBy.ToLower()) ? orderBy : "name";
         // Open connection
         using SqlConnection connection = new SqlConnection(_configuration.GetConnectionString("Default"));
         // Create command
         using SqlCommand command = new SqlCommand();
         command.Connection = connection;
-        command.CommandText = "SELECT * FROM ANIMAL;";
+        command.CommandText = "SELECT * FROM Animal ORDER BY {orderBy};";
         // Execute command
         var reader = command.ExecuteReader();
         var animals = new List<Animal>();
