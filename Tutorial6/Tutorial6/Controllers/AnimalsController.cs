@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Tutorial6.Models;
 using Tutorial6.Models.DTOs;
 using Tutorial6.Repositories;

@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Tutorial6.Models;
 using Tutorial6.Models.DTOs;
 
@@ -15,7 +17,8 @@ public class AnimalRepository
         // Create command
         using SqlCommand command = new SqlCommand();
         command.Connection = connection;
-        command.CommandText = "SELECT * FROM Animal ORDER BY {orderBy};";
+        command.CommandText = "SELECT * FROM Animal ORDER BY @orderBy;";
+        command.Parameters.AddWithValue("@orderBy", orderBy);
         // Execute command
         var reader = command.ExecuteReader();
         var animals = new List<Animal>();
